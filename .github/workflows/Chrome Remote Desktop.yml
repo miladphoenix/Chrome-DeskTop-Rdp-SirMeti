@@ -1,0 +1,44 @@
+name: Chrome Remote Desktop
+
+on: 
+  workflow_dispatch:
+    inputs:
+      authcode:
+        description: 'Enter CRD code'
+        required: true
+      pincode:
+        description: 'Six digit Pin'
+        required: true
+  
+jobs:
+  build:
+    runs-on: Windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Initializing Setup
+      run: ./setup.ps1
+    - name: Starting CRD
+      run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
+    - name: Download Important Files.
+      run: |
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/Chrome%20v92.zip -OutFile Chrome%20v92.zip
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/Chrome%20v93.zip -OutFile Chrome%20v93.zip
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/WinrarSirMeti.exe -OutFile WinrarSirMeti.exe
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/FireFox.zip -OutFile FireFox.zip
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/HandBrake.zip -OutFile HandBrake.zip
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/Instagram%20view.zip -OutFile Instagram%20view.zip
+        Invoke-WebRequest https://raw.githubusercontent.com/miladphoenix/i/main/A_LIKE.zip -OutFile "A_LIKE.zip"
+    - name: Copy To Desktop
+      run: |
+        copy WinrarSirMeti.exe C:\Users\Public\Desktop\WinrarSirMeti.exe
+        copy Chrome%20v92.zip C:\Users\Public\Desktop\Chromev92.zip
+        copy Chrome%20v93.zip C:\Users\Public\Desktop\Chromev93.zip
+        copy FireFox.zip C:\Users\Public\Desktop\FireFox.zip
+        copy HandBrake.zip C:\Users\Public\Desktop\HandBrake.zip
+        copy Instagram%20view.zip C:\Users\Public\Desktop\Instagram_view.zip
+        copy "A_LIKE.zip" "C:\Users\Public\Desktop\A_LIKE.zip"
+    - name: Install Winrar
+      run: cmd /c C:\Users\Public\Desktop\WinrarSirMeti.exe WinrarSirMeti.exe /s
+    - name: Keep Alive SirMeti
+      run: ./timeout.ps1
